@@ -61,11 +61,12 @@ class TransactionController extends Controller
             ]
         ];
 
-        $paymentUrl = Veritrans_Snap::createTransaction($payload)->redirect_url;
-        $transaction->snap_token = $paymentUrl;
+        $payment = Veritrans_Snap::createTransaction($payload);
+        $transaction->redirect_url = $payment->redirect_url;
+        $transaction->snap_token = $payment->token;
         $transaction->save();
 
-        return Redirect::to($paymentUrl);
+        return Redirect::to($payment->redirect_url);
     }
 
     public function requestUrl(Request $request) {
